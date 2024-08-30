@@ -3,12 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-final settingRepositoryProvider = FutureProvider<SettingRepository>(
-  (ref) async {
-    final prefs = await ref.watch(sharedPreferencesProvider.future);
-    return SettingRepository(prefs: prefs);
-  },
-);
+final settingRepositoryProvider = Provider<SettingRepository>((ref) {
+  return SettingRepository(prefs: ref.read(sharedPreferencesProvider));
+});
 
 class SettingRepository {
   final SharedPreferences prefs;

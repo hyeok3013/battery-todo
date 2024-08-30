@@ -13,7 +13,8 @@ class ThemeService extends Notifier<AppTheme> {
   @override
   AppTheme build() => LightTheme();
 
-  final SettingRepository settingRepository;
+  SettingRepository get settingRepository =>
+      ref.read(settingRepositoryProvider);
 
   Future<void> loadTheme() async {
     final themeName = settingRepository.getTheme();

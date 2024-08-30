@@ -4,6 +4,7 @@ import 'package:battery_todo/src/service/lang_service.dart';
 import 'package:battery_todo/src/service/notification_service.dart';
 import 'package:battery_todo/src/service/theme_service.dart';
 import 'package:battery_todo/src/view/todo/todo_view.dart';
+import 'package:battery_todo/util/helper/shared_preferences_helper.dart';
 import 'package:battery_todo/util/lang/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -18,10 +19,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
   tz.initializeTimeZones();
+  final sharedPreferences = await SharedPreferences.getInstance();
+
   runApp(
-    ProviderScope(
-      child: MyApp(),
-    ),
+      ProviderScope(
+        overrides: [
+          sharedPreferencesProvider.overrideWithValue(sharedPreferences),
+        ], child: MyApp(),
   );
 }
 
