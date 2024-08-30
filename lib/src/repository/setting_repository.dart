@@ -1,11 +1,19 @@
+import 'package:battery_todo/util/helper/shared_preferences_helper.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+final settingRepositoryProvider = FutureProvider<SettingRepository>(
+  (ref) async {
+    final prefs = await ref.watch(sharedPreferencesProvider.future);
+    return SettingRepository(prefs: prefs);
+  },
+);
 
 class SettingRepository {
   final SharedPreferences prefs;
 
-  SettingRepository(this.prefs);
+  SettingRepository({required this.prefs});
 
   // 첫 실행 여부
   Future<void> setFirstLaunch(bool value) async {
@@ -49,9 +57,4 @@ class SettingRepository {
   String? getLocale() {
     return prefs.getString('locale');
   }
-}
-
-extension SettingRepositoryExt on BuildContext {
-  SettingRepository get settingRepository => read<SettingRepository>();
-  SharedPreferences get prefs => settingRepository.prefs;
 }

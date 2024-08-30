@@ -8,6 +8,7 @@ import 'package:battery_todo/util/lang/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,28 +19,7 @@ void main() async {
   final prefs = await SharedPreferences.getInstance();
   tz.initializeTimeZones();
   runApp(
-    MultiProvider(
-      providers: [
-        Provider(
-          create: (context) => SettingRepository(prefs),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => ThemeService(
-            settingRepository: context.settingRepository,
-          ),
-        ),
-        ChangeNotifierProvider(
-            create: (context) => LangService(
-                  settingRepository: context.settingRepository,
-                )),
-        ChangeNotifierProvider(
-          create: (context) => BatteryService(),
-        ),
-        Provider(
-            create: (context) => NotificationService(
-                  settingRepository: context.settingRepository,
-                )),
-      ],
+    ProviderScope(
       child: MyApp(),
     ),
   );
