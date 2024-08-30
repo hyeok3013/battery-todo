@@ -3,8 +3,15 @@ import 'dart:io';
 import 'package:battery_todo/src/repository/setting_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
+
+final notificationServiceProvider = Provider<NotificationService>(
+  (ref) => NotificationService(
+    settingRepository: ref.read(settingRepositoryProvider),
+  ),
+);
 
 class NotificationService {
   late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
