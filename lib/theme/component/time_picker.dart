@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TimePicker extends StatelessWidget {
   const TimePicker(
@@ -10,12 +11,12 @@ class TimePicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 300,
+      height: 300.h,
       color: Colors.white,
       child: Column(
         children: [
           SizedBox(
-            height: 200,
+            height: 200.h,
             child: CupertinoDatePicker(
               mode: CupertinoDatePickerMode.time,
               initialDateTime:
