@@ -29,7 +29,7 @@ void main() async {
         sharedPreferencesProvider.overrideWithValue(prefs),
         todoRepositoryProvider.overrideWithValue(todoRepository),
       ],
-      child: MyApp(),
+      child: const MyApp(),
     ),
   );
 }
@@ -58,6 +58,10 @@ class _MyAppState extends ConsumerState<MyApp> {
           supportedLocales: S.delegate.supportedLocales,
           theme: ref.themeService.themeData,
           locale: ref.watch(langServiceProvider),
+          themeMode:
+              ref.watch(themeServiceProvider).brightness == Brightness.light
+                  ? ThemeMode.light
+                  : ThemeMode.dark,
           home: TodoView(),
         );
       },

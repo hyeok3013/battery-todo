@@ -15,32 +15,28 @@ final todoViewModelProvider =
 );
 
 class TodoViewModel extends BaseViewModel<TodoViewState> {
-  late final TodoRepository todoRepository;
-  late final SettingRepository settingRepository;
-
   final TextEditingController textEditingController = TextEditingController();
   final ScrollController scrollController = ScrollController();
 
   @override
   TodoViewState build() {
-    todoRepository = ref.read(todoRepositoryProvider);
-    settingRepository = ref.read(settingRepositoryProvider);
+    // 배터리 서비스의 상태를 읽는 시점에서 초기화가 완료되었는지 확인
+    final batteryState = ref.read(batteryServiceProvider);
+    final bool isFull = batteryState?.isFull ?? false;
 
-    // 배터리 서비스의 상태를 감시
-    final batteryState = ref.watch(batteryServiceProvider);
-
-    // 배터리 상태가 변경될 때 onBatteryStateChanged 호출
-    if (batteryState?.isFull == true) {
+    if (isFull) {
       onBatteryStateChanged();
     }
 
-    // 초기 상태 설정
     return TodoViewState(
       todos: [],
+      isFull: isFull,
     );
   }
 
-  bool get isFull => ref.watch(batteryServiceProvider)?.isFull ?? false;
+  TodoRepository get todoRepository => ref.read(todoRepositoryProvider);
+  SettingRepository get settingRepository =>
+      ref.read(settingRepositoryProvider);
 
   @override
   void dispose() {
@@ -50,10 +46,6 @@ class TodoViewModel extends BaseViewModel<TodoViewState> {
 
   void onBatteryStateChanged() {
     print("Battery is full. Managing todos...");
-    // 예시: 특정 todo 작업 수행
-    // addTodo("Battery is full");
-
-    // 상태 변경 시 notifyListeners() 대신 상태를 갱신합니다.
     state = state.copyWith(todos: state.todos);
   }
 

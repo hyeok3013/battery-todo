@@ -18,36 +18,36 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-class TodoView extends ConsumerStatefulWidget {
+class TodoView extends StatefulWidget {
   const TodoView({super.key});
 
   @override
-  ConsumerState<TodoView> createState() => _TodoViewState();
+  _TodoViewState createState() => _TodoViewState();
 }
 
-class _TodoViewState extends ConsumerState<TodoView> {
+class _TodoViewState extends State<TodoView> {
   @override
   void initState() {
     super.initState();
-    ref.read(todoRepositoryProvider).initialize();
   }
 
   @override
   Widget build(BuildContext context) {
     return BaseView(
       viewModelProvider: todoViewModelProvider,
-      builder: (ref, viewModel, state) => HideKeyboard(
-        child: Scaffold(
+      builder: (ref, viewModel, state) {
+        final isFull = ref.watch(batteryServiceProvider)?.isFull ?? false;
+
+        return HideKeyboard(
+          child: Scaffold(
             appBar: AppBar(
-              backgroundColor:
-                  viewModel.isFull ? ref.color.primary : ref.color.secondary,
+              backgroundColor: isFull ? ref.color.primary : ref.color.secondary,
               title: Text(
-                '${viewModel.isFull ? 'On' : 'Off'} 100%',
+                '${isFull ? 'On' : 'Off'} 100%',
                 style: ref.typo.headline1.copyWith(
-                    fontWeight: ref.typo.semiBold,
-                    color: viewModel.isFull
-                        ? ref.color.onPrimary
-                        : ref.color.onSecondary),
+                  fontWeight: ref.typo.semiBold,
+                  color: isFull ? ref.color.onPrimary : ref.color.onSecondary,
+                ),
               ),
               titleSpacing: 20.w,
               actions: [
@@ -77,7 +77,6 @@ class _TodoViewState extends ConsumerState<TodoView> {
                     itemBuilder: (context, index) {
                       final item = viewModel.getItemAtIndex(index);
                       if (item is String) {
-                        ///헤더부분
                         return Row(
                           children: [
                             Expanded(
@@ -112,8 +111,8 @@ class _TodoViewState extends ConsumerState<TodoView> {
                             todo: item,
                             onDismissed: () async {
                               await viewModel.deleteTodo(item);
-                              context
-                                  .read<NotificationService>()
+                              ref
+                                  .read(notificationServiceProvider)
                                   .updateBadgeNumber(state.todos.length);
                             },
                             onDoubleTap: () {
@@ -140,21 +139,23 @@ class _TodoViewState extends ConsumerState<TodoView> {
                       );
                     });
 
-                    context
-                        .read<NotificationService>()
+                    ref
+                        .read(notificationServiceProvider)
                         .updateBadgeNumber(state.todos.length);
 
                     viewModel.textEditingController.clear();
                   },
                   controller: viewModel.textEditingController,
-                  isFull: viewModel.isFull,
-                  hint: viewModel.isFull
+                  isFull: isFull,
+                  hint: isFull
                       ? S.current.enableHintText
                       : S.current.disableHintText,
                 ),
               ],
-            )),
-      ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

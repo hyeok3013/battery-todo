@@ -17,7 +17,12 @@ class BaseView<VM extends BaseViewModel<S>, S extends BaseViewState>
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // viewModelProvider 초기화 여부를 확인
     final state = ref.watch(viewModelProvider);
+    if (state == null) {
+      // 초기화되지 않은 경우 기본 상태를 반환하거나 로딩 상태를 표시
+      return Center(child: CircularProgressIndicator());
+    }
     return builder(
       ref,
       ref.read(viewModelProvider.notifier),

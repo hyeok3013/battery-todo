@@ -7,12 +7,15 @@ final batteryServiceProvider =
     NotifierProvider.autoDispose<BatteryService, BatteryServiceState?>(
         BatteryService.new);
 
-class BatteryService extends Notifier<BatteryServiceState?>
+class BatteryService extends AutoDisposeNotifier<BatteryServiceState?>
     with WidgetsBindingObserver {
   @override
   BatteryServiceState? build() {
-    initBattery(); // 배터리 초기화
-    return state; // 초기 상태는 null
+    // 초기 상태를 명시적으로 설정 (예: 배터리 정보를 가져오기 전 기본 값)
+    state = BatteryServiceState(batteryLevel: 0, isFull: false);
+
+    initBattery(); // 배터리 초기화 (비동기 작업)
+    return state; // 초기 상태 반환
   }
 
   final Battery battery = Battery();
@@ -44,8 +47,6 @@ class BatteryService extends Notifier<BatteryServiceState?>
 
   @override
   void dispose() {
-    // 더 이상 필요하지 않을 때 옵저버 제거
     WidgetsBinding.instance.removeObserver(this);
-    // super.dispose(); 호출이 필요하지 않습니다. 직접 정리 작업만 수행합니다.
   }
 }
