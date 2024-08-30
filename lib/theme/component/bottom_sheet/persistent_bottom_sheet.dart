@@ -1,8 +1,9 @@
 import 'package:battery_todo/src/service/theme_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class PersistentBottomSheet extends StatefulWidget {
+class PersistentBottomSheet extends ConsumerStatefulWidget {
   const PersistentBottomSheet({
     super.key,
     this.hint,
@@ -19,10 +20,11 @@ class PersistentBottomSheet extends StatefulWidget {
   final bool isFull;
 
   @override
-  State<PersistentBottomSheet> createState() => _PersistentBottomSheetState();
+  ConsumerState<PersistentBottomSheet> createState() =>
+      _PersistentBottomSheetState();
 }
 
-class _PersistentBottomSheetState extends State<PersistentBottomSheet> {
+class _PersistentBottomSheetState extends ConsumerState<PersistentBottomSheet> {
   late final TextEditingController controller =
       widget.controller ?? TextEditingController();
   final FocusNode focusNode = FocusNode();
@@ -53,7 +55,7 @@ class _PersistentBottomSheetState extends State<PersistentBottomSheet> {
   Widget build(BuildContext context) {
     return Container(
       constraints: BoxConstraints(maxHeight: 180.h),
-      color: context.color.surface,
+      color: ref.color.surface,
       child: IntrinsicHeight(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -76,39 +78,39 @@ class _PersistentBottomSheetState extends State<PersistentBottomSheet> {
                     widget.onSubmitted?.call(text);
                     controller.clear();
                   },
-                  style: context.typo.headline5.copyWith(
-                    color: context.color.text,
+                  style: ref.typo.headline5.copyWith(
+                    color: ref.color.text,
                   ),
-                  cursorColor: context.color.primary,
+                  cursorColor: ref.color.primary,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderSide: BorderSide(
                           width: 0.5.w,
                           color: widget.isFull
-                              ? context.color.primary
-                              : context.color.secondary),
+                              ? ref.color.primary
+                              : ref.color.secondary),
                       borderRadius: BorderRadius.circular(5),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderSide:
-                          BorderSide(width: 0.5, color: context.color.primary),
+                          BorderSide(width: 0.5, color: ref.color.primary),
                       borderRadius: BorderRadius.circular(5),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderSide:
-                          BorderSide(width: 2.w, color: context.color.primary),
+                          BorderSide(width: 2.w, color: ref.color.primary),
                       borderRadius: BorderRadius.circular(5),
                     ),
                     disabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          width: 0.5.w, color: context.color.secondary),
+                      borderSide:
+                          BorderSide(width: 0.5.w, color: ref.color.secondary),
                       borderRadius: BorderRadius.circular(5),
                     ),
                     filled: true,
-                    fillColor: context.color.hintContainer,
-                    hintStyle: context.typo.headline5.copyWith(
-                      fontWeight: context.typo.light,
-                      color: context.color.onHintContainer,
+                    fillColor: ref.color.hintContainer,
+                    hintStyle: ref.typo.headline5.copyWith(
+                      fontWeight: ref.typo.light,
+                      color: ref.color.onHintContainer,
                     ),
                     hintText: widget.hint,
                     contentPadding: EdgeInsets.symmetric(
@@ -120,8 +122,8 @@ class _PersistentBottomSheetState extends State<PersistentBottomSheet> {
                       icon: Icon(Icons.battery_charging_full,
                           size: 30,
                           color: widget.isFull
-                              ? context.color.primary
-                              : context.color.secondary),
+                              ? ref.color.primary
+                              : ref.color.secondary),
                     ),
                   ),
                 ),
@@ -137,23 +139,23 @@ class _PersistentBottomSheetState extends State<PersistentBottomSheet> {
                     bottom: BorderSide(
                       width: hasFocus ? 2.w : 0.5.w,
                       color: widget.isFull
-                          ? context.color.primary
-                          : context.color.secondary,
+                          ? ref.color.primary
+                          : ref.color.secondary,
                     ),
                     top: BorderSide(
                       width: hasFocus ? 2.w : 0.5.w,
                       color: widget.isFull
-                          ? context.color.primary
-                          : context.color.secondary,
+                          ? ref.color.primary
+                          : ref.color.secondary,
                     ),
                     right: BorderSide(
                       width: hasFocus ? 2.w : 0.5.w,
                       color: widget.isFull
-                          ? context.color.primary
-                          : context.color.secondary,
+                          ? ref.color.primary
+                          : ref.color.secondary,
                     ),
                   ),
-                  color: context.color.hintContainer,
+                  color: ref.color.hintContainer,
                 ),
               ),
             ),

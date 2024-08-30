@@ -1,8 +1,9 @@
 import 'package:battery_todo/src/service/theme_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class Tile extends StatelessWidget {
+class Tile extends ConsumerWidget {
   const Tile({
     super.key,
     required this.icon,
@@ -17,7 +18,7 @@ class Tile extends StatelessWidget {
   final void Function() onPressed;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: onPressed,
       behavior: HitTestBehavior.translucent,
@@ -28,7 +29,7 @@ class Tile extends StatelessWidget {
             /// Start Icon
             Icon(
               icon,
-              color: context.color.text,
+              color: ref.color.text,
             ),
             SizedBox(width: 8.w),
 
@@ -36,15 +37,15 @@ class Tile extends StatelessWidget {
             Expanded(
               child: Text(
                 title,
-                style: context.typo.headline5,
+                style: ref.typo.headline5,
               ),
             ),
 
             /// Subtitle
             Text(
               subtitle,
-              style: context.typo.subtitle1.copyWith(
-                color: context.color.primary,
+              style: ref.typo.subtitle1.copyWith(
+                color: ref.color.primary,
               ),
             ),
             SizedBox(width: 8.w),

@@ -5,15 +5,16 @@ import 'package:battery_todo/theme/component/tile.dart';
 import 'package:battery_todo/util/helper/intl_helper.dart';
 import 'package:battery_todo/util/lang/generated/l10n.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart';
 
-class SettingBottomSheet extends StatelessWidget {
+class SettingBottomSheet extends ConsumerWidget {
   const SettingBottomSheet({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final bool isLightTheme = context.theme.brightness == Brightness.light;
-    final LangService langService = context.watch();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final bool isLightTheme = ref.theme.brightness == Brightness.light;
+    final LangService langService = ref.watch(langServiceProvider.notifier);
     return BaseBottomSheet(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -25,7 +26,7 @@ class SettingBottomSheet extends StatelessWidget {
                 : Icons.dark_mode_outlined,
             title: S.current.theme,
             subtitle: isLightTheme ? S.current.light : S.current.dark,
-            onPressed: context.read<ThemeService>().toggleTheme,
+            onPressed: ref.read(themeServiceProvider.notifier).toggleTheme,
           ),
 
           /// Lang Tile
