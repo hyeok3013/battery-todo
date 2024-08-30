@@ -1,4 +1,5 @@
 import 'package:battery_todo/src/repository/setting_repository.dart';
+import 'package:battery_todo/src/repository/todo_repository.dart';
 import 'package:battery_todo/src/service/battery_service.dart';
 import 'package:battery_todo/src/service/lang_service.dart';
 import 'package:battery_todo/src/service/notification_service.dart';
@@ -18,12 +19,15 @@ import 'package:timezone/data/latest.dart' as tz;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
+  final todoRepository = TodoRepository();
+  await todoRepository.initialize(); // Isar 초기화
   tz.initializeTimeZones();
 
   runApp(
     ProviderScope(
       overrides: [
         sharedPreferencesProvider.overrideWithValue(prefs),
+        todoRepositoryProvider.overrideWithValue(todoRepository),
       ],
       child: MyApp(),
     ),

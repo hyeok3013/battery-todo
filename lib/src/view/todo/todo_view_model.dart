@@ -17,6 +17,7 @@ class TodoViewModel extends BaseViewModel {
   List<Todo> todos = [];
 
   bool get isFull => batteryService.isFull;
+
   TodoViewModel({
     required this.settingRepository,
     required this.todoRepository,

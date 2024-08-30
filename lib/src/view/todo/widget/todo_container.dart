@@ -1,9 +1,10 @@
 import 'package:battery_todo/src/model/todo/todo.dart';
 import 'package:battery_todo/src/service/theme_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class TodoContainer extends StatelessWidget {
+class TodoContainer extends ConsumerWidget {
   final Todo todo;
   final Function() onDoubleTap;
   final Function() onDismissed;
@@ -16,9 +17,9 @@ class TodoContainer extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Dismissible(
-      movementDuration: Duration(milliseconds: 300),
+      movementDuration: const Duration(milliseconds: 300),
       onDismissed: (dismissDirection) => onDismissed(),
       direction: DismissDirection.horizontal,
       background: Row(
@@ -28,7 +29,7 @@ class TodoContainer extends StatelessWidget {
               width: double.infinity,
               height: double.infinity,
               decoration: BoxDecoration(
-                color: context.color.primary,
+                color: ref.color.primary,
                 borderRadius: BorderRadius.circular(5),
               ),
             ),
@@ -37,7 +38,7 @@ class TodoContainer extends StatelessWidget {
             width: 5.w,
             height: 20.h,
             decoration: BoxDecoration(
-              color: context.color.primary,
+              color: ref.color.primary,
             ),
           ),
         ],
@@ -48,7 +49,7 @@ class TodoContainer extends StatelessWidget {
             child: Container(
               width: double.infinity,
               decoration: BoxDecoration(
-                color: context.color.secondary,
+                color: ref.color.secondary,
                 borderRadius: BorderRadius.circular(5),
               ),
             ),
@@ -57,7 +58,7 @@ class TodoContainer extends StatelessWidget {
             width: 5.w,
             height: 20.h,
             decoration: BoxDecoration(
-              color: context.color.secondary,
+              color: ref.color.secondary,
             ),
           ),
         ],
@@ -77,8 +78,8 @@ class TodoContainer extends StatelessWidget {
                   constraints: BoxConstraints(maxWidth: 300.w),
                   decoration: BoxDecoration(
                     color: todo.priority
-                        ? context.color.secondary
-                        : context.color.tertiary,
+                        ? ref.color.secondary
+                        : ref.color.tertiary,
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: Padding(
@@ -86,8 +87,8 @@ class TodoContainer extends StatelessWidget {
                         EdgeInsets.symmetric(vertical: 15.h, horizontal: 20.w),
                     child: Text(
                       todo.title,
-                      style: context.typo.subtitle1
-                          .copyWith(fontWeight: context.typo.semiBold),
+                      style: ref.typo.subtitle1
+                          .copyWith(fontWeight: ref.typo.semiBold),
 
                       maxLines: null, // 줄 수 제한 없음
                       overflow: TextOverflow.visible, // 텍스트 오버플로우를 보여줌
@@ -99,9 +100,8 @@ class TodoContainer extends StatelessWidget {
                 width: 5.w,
                 height: 20.h,
                 decoration: BoxDecoration(
-                  color: todo.priority
-                      ? context.color.secondary
-                      : context.color.tertiary,
+                  color:
+                      todo.priority ? ref.color.secondary : ref.color.tertiary,
                 ),
                 child: Padding(
                   padding:

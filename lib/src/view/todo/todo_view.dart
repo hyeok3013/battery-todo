@@ -14,24 +14,25 @@ import 'package:battery_todo/theme/component/bottom_sheet/persistent_bottom_shee
 import 'package:battery_todo/util/lang/generated/l10n.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-class TodoView extends StatefulWidget {
+class TodoView extends ConsumerStatefulWidget {
   const TodoView({super.key});
 
   @override
-  State<TodoView> createState() => _TodoViewState();
+  ConsumerState<TodoView> createState() => _TodoViewState();
 }
 
-class _TodoViewState extends State<TodoView> {
+class _TodoViewState extends ConsumerState<TodoView> {
   late TodoViewModel todoViewModel;
 
   @override
   void initState() {
     super.initState();
     todoViewModel = TodoViewModel(
-      todoRepository: TodoRepository(),
+      todoRepository: ref.read(todoRepositoryProvider),
       settingRepository: context.settingRepository,
       batteryService: context.read<BatteryService>(),
     );
