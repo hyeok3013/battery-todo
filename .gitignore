@@ -1,0 +1,79 @@
+
+# Flutter & Dart related
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+build/
+android/app/debug.keystore
+
+# Gradle
+.gradle/
+**/build/
+
+# Java & Kotlin
+*.class
+*.jar
+*.war
+*.ear
+
+# Android Studio
+.idea/
+*.iml
+*.hprof
+
+# Node.js
+node_modules/
+
+# Others
+*.log
+*.tmp
+*.swp
+__pycache__/
+*.py[cod]
+*.so
+*.dylib
+*.bin
+*.o
+*.a
+*.dSYM/
+*.apk
+*.aar
+*.lock
+*.zip
+
+# JetBrains
+*.idea/
+*.iws
+*.iml
+*.ipr
+
+# MacOS
+.DS_Store
+*.plist
+
+# Misc
+*.lock
+*.log
+*.swp
+*~.nib
+*.bak
+*.old
+*.orig
+*.rej
+*.swo
+*.prf
+
+# Backup files
+*.bak
+*.tmp
+*.orig
+*.old
+*.log
+*.lock
+*.diff
+*.patch
+*.seed
+*.save
+*.cfg

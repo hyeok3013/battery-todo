@@ -1,0 +1,18 @@
+{
+  "@@locale" : "en",
+  "enableHintText" : "Enter what you need to do.",
+  "disableHintText" : "It needs to be charged.",
+  "setting" : "Setting",
+  "theme": "Theme",
+  "light": "Light",
+  "dark": "Dark",
+  "language": "Language",
+  "en": "English",
+  "ko": "Korean",
+  "onboardingWelcome": "Welcome! Use this app to manage your tasks effectively. Here’s a quick guide to the main features of the app.",
+  "onboardingCondition": "You can only create to-dos when your phone battery is at 100%. Add new tasks when your battery is fully charged!",
+  "onboardingDelete": "Swipe left on a to-do to delete it. Easily remove unnecessary items.",
+  "onboardingDone": "Swipe right on a to-do to mark it as done.",
+  "onboardingImportant": "Double tap a to-do to mark it as important. Highlight crucial tasks to keep them visible.",
+  "onboardingNotification": "By allowing notification permissions, you can see your remaining to-dos from the app icon. Enable permissions for easier task management."
+}
