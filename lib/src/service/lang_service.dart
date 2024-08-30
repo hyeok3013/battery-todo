@@ -1,35 +1,33 @@
 import 'package:battery_todo/src/repository/setting_repository.dart';
 import 'package:battery_todo/util/helper/intl_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class LangService with ChangeNotifier {
-  LangService({
-    required this.settingRepository,
-    Locale? locale,
-  }) : locale = locale ?? IntlHelper.en {
+final langServiceProvider =
+    NotifierProvider<LangService, Locale>(LangService.new);
+
+class LangService extends Notifier<Locale> {
+  @override
+  Locale build() {
     loadLang();
+    return IntlHelper.en;
   }
 
-  final SettingRepository settingRepository;
-
-  /// 현재 언어
-  Locale locale;
+  SettingRepository get settingRepository =>
+      ref.read(settingRepositoryProvider);
 
   Future<void> loadLang() async {
     final localeCode = settingRepository.getLocale();
     if (localeCode == 'en') {
-      locale = IntlHelper.en;
+      state = IntlHelper.en;
     } else {
-      locale = IntlHelper.ko;
+      state = IntlHelper.ko;
     }
-    notifyListeners();
   }
 
   /// 언어 변경
   void toggleLang() {
-    locale = IntlHelper.isKo ? IntlHelper.en : IntlHelper.ko;
-    print(locale.languageCode);
-    settingRepository.setLocale(locale.languageCode);
-    notifyListeners();
+    state = IntlHelper.isKo ? IntlHelper.en : IntlHelper.ko;
+    settingRepository.setLocale(state.languageCode);
   }
 }

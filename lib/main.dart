@@ -19,12 +19,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
   tz.initializeTimeZones();
-  final sharedPreferences = await SharedPreferences.getInstance();
 
   runApp(
       ProviderScope(
         overrides: [
-          sharedPreferencesProvider.overrideWithValue(sharedPreferences),
+          sharedPreferencesProvider.overrideWithValue(prefs),
         ], child: MyApp(),
   );
 }
