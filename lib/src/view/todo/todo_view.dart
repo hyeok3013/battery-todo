@@ -26,36 +26,28 @@ class TodoView extends ConsumerStatefulWidget {
 }
 
 class _TodoViewState extends ConsumerState<TodoView> {
-  late TodoViewModel todoViewModel;
-
   @override
   void initState() {
     super.initState();
-    todoViewModel = TodoViewModel(
-      todoRepository: ref.read(todoRepositoryProvider),
-      settingRepository: context.settingRepository,
-      batteryService: context.read<BatteryService>(),
-    );
-    todoViewModel.initialize();
+    ref.read(todoRepositoryProvider).initialize();
   }
 
   @override
   Widget build(BuildContext context) {
     return BaseView(
-      viewModel: todoViewModel,
-      builder: (BuildContext context, TodoViewModel viewModel) => HideKeyboard(
+      viewModelProvider: todoViewModelProvider,
+      builder: (ref, viewModel, state) => HideKeyboard(
         child: Scaffold(
             appBar: AppBar(
-              backgroundColor: viewModel.isFull
-                  ? context.color.primary
-                  : context.color.secondary,
+              backgroundColor:
+                  viewModel.isFull ? ref.color.primary : ref.color.secondary,
               title: Text(
                 '${viewModel.isFull ? 'On' : 'Off'} 100%',
-                style: context.typo.headline1.copyWith(
-                    fontWeight: context.typo.semiBold,
+                style: ref.typo.headline1.copyWith(
+                    fontWeight: ref.typo.semiBold,
                     color: viewModel.isFull
-                        ? context.color.onPrimary
-                        : context.color.onSecondary),
+                        ? ref.color.onPrimary
+                        : ref.color.onSecondary),
               ),
               titleSpacing: 20.w,
               actions: [
@@ -81,10 +73,9 @@ class _TodoViewState extends ConsumerState<TodoView> {
                     controller: viewModel.scrollController,
                     padding:
                         EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
-                    itemCount: viewModel.getItemCount(viewModel.todos),
+                    itemCount: viewModel.getItemCount(),
                     itemBuilder: (context, index) {
-                      final item =
-                          viewModel.getItemAtIndex(viewModel.todos, index);
+                      final item = viewModel.getItemAtIndex(index);
                       if (item is String) {
                         ///헤더부분
                         return Row(
@@ -93,11 +84,11 @@ class _TodoViewState extends ConsumerState<TodoView> {
                               child: Container(
                                 padding: EdgeInsets.symmetric(
                                     vertical: 10.h, horizontal: 16.w),
-                                color: context.color.hint,
+                                color: ref.color.hint,
                                 alignment: Alignment.center,
                                 child: Text(
                                   item,
-                                  style: context.typo.headline6,
+                                  style: ref.typo.headline6,
                                 ),
                               ),
                             ),
@@ -105,7 +96,7 @@ class _TodoViewState extends ConsumerState<TodoView> {
                               width: 5.w,
                               height: 20.h,
                               decoration: BoxDecoration(
-                                color: context.color.hint,
+                                color: ref.color.hint,
                               ),
                               child: Padding(
                                 padding: EdgeInsets.symmetric(
@@ -123,7 +114,7 @@ class _TodoViewState extends ConsumerState<TodoView> {
                               await viewModel.deleteTodo(item);
                               context
                                   .read<NotificationService>()
-                                  .updateBadgeNumber(viewModel.todos.length);
+                                  .updateBadgeNumber(state.todos.length);
                             },
                             onDoubleTap: () {
                               viewModel.updateTodoPriority(
@@ -151,10 +142,9 @@ class _TodoViewState extends ConsumerState<TodoView> {
 
                     context
                         .read<NotificationService>()
-                        .updateBadgeNumber(viewModel.todos.length);
+                        .updateBadgeNumber(state.todos.length);
 
                     viewModel.textEditingController.clear();
-                    viewModel.batteryService.updateIsFull();
                   },
                   controller: viewModel.textEditingController,
                   isFull: viewModel.isFull,

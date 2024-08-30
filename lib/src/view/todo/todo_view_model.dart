@@ -3,48 +3,62 @@ import 'package:battery_todo/src/repository/setting_repository.dart';
 import 'package:battery_todo/src/repository/todo_repository.dart';
 import 'package:battery_todo/src/service/battery_service.dart';
 import 'package:battery_todo/src/view/base_view_model.dart';
+import 'package:battery_todo/src/view/todo/todo_view_state.dart';
 import 'package:battery_todo/util/lang/generated/l10n.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class TodoViewModel extends BaseViewModel {
-  final TodoRepository todoRepository;
-  final SettingRepository settingRepository;
-  final BatteryService batteryService;
+// TodoViewModel의 Provider 정의
+final todoViewModelProvider =
+    NotifierProvider.autoDispose<TodoViewModel, TodoViewState>(
+  TodoViewModel.new,
+);
+
+class TodoViewModel extends BaseViewModel<TodoViewState> {
+  late final TodoRepository todoRepository;
+  late final SettingRepository settingRepository;
+
   final TextEditingController textEditingController = TextEditingController();
   final ScrollController scrollController = ScrollController();
 
-  List<Todo> todos = [];
+  @override
+  TodoViewState build() {
+    todoRepository = ref.read(todoRepositoryProvider);
+    settingRepository = ref.read(settingRepositoryProvider);
 
-  bool get isFull => batteryService.isFull;
+    // 배터리 서비스의 상태를 감시
+    final batteryState = ref.watch(batteryServiceProvider);
 
-  TodoViewModel({
-    required this.settingRepository,
-    required this.todoRepository,
-    required this.batteryService,
-  }) {
-    batteryService.addListener(onBatteryStateChanged);
+    // 배터리 상태가 변경될 때 onBatteryStateChanged 호출
+    if (batteryState?.isFull == true) {
+      onBatteryStateChanged();
+    }
+
+    // 초기 상태 설정
+    return TodoViewState(
+      todos: [],
+    );
   }
+
+  bool get isFull => ref.watch(batteryServiceProvider)?.isFull ?? false;
 
   @override
   void dispose() {
     textEditingController.dispose();
     scrollController.dispose();
-    batteryService.removeListener(onBatteryStateChanged);
-    super.dispose();
   }
 
   void onBatteryStateChanged() {
-    if (batteryService.isFull) {
-      print("Battery is full. Managing todos...");
-      // 예시: 특정 todo 작업 수행
-      // addTodo("Battery is full");
-    }
-    notifyListeners();
+    print("Battery is full. Managing todos...");
+    // 예시: 특정 todo 작업 수행
+    // addTodo("Battery is full");
+
+    // 상태 변경 시 notifyListeners() 대신 상태를 갱신합니다.
+    state = state.copyWith(todos: state.todos);
   }
 
-  int getItemCount(List<Todo> todos) {
-    final groupedTodos = groupTodosByDate(todos);
+  int getItemCount() {
+    final groupedTodos = groupTodosByDate(state.todos);
     int count = 0;
     groupedTodos.forEach((date, todos) {
       count += todos.length + 1; // 날짜 헤더 + 투두 아이템들
@@ -52,8 +66,8 @@ class TodoViewModel extends BaseViewModel {
     return count;
   }
 
-  dynamic getItemAtIndex(List<Todo> todos, int index) {
-    final groupedTodos = groupTodosByDate(todos);
+  dynamic getItemAtIndex(int index) {
+    final groupedTodos = groupTodosByDate(state.todos);
     int count = 0;
     for (var date in groupedTodos.keys) {
       if (index == count) {
@@ -89,8 +103,8 @@ class TodoViewModel extends BaseViewModel {
   }
 
   Future<void> loadTodos() async {
-    todos = await todoRepository.getTodos();
-    notifyListeners();
+    final todos = await todoRepository.getTodos();
+    state = state.copyWith(todos: todos);
   }
 
   Future<void> addTodo(String title) async {
@@ -121,7 +135,6 @@ class TodoViewModel extends BaseViewModel {
   }
 
   Future<void> onboardingTodo() async {
-    ///이 부분 다국어 설정
     List<Todo> initialTodos = [
       Todo()
         ..title = S.current.onboardingWelcome

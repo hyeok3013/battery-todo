@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:battery_todo/src/view/base_view_state.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class BaseViewModel with ChangeNotifier {
-  //배터리 상태를 구독하게 할까?
-}
+abstract class BaseViewModel<S extends BaseViewState>
+    extends AutoDisposeNotifier<S> {}
